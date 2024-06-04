@@ -261,16 +261,19 @@ ${indentString(body.sparql)}
         multipartForms
           .map((item) => {
             const enabled = item.enabled ? '' : '~';
+            const contentType =
+              item.contentType && item.contentType !== '' ? ' (Content-Type=' + item.contentType + ')' : '';
 
             if (item.type === 'text') {
-              return `${enabled}${item.name}: ${getValueString(item.value)}`;
+              const textValue = `${item.value}${contentType}`;
+              return `${enabled}${item.name}: ${getValueString(textValue)}`;
             }
 
             if (item.type === 'file') {
               let filepaths = item.value || [];
               let filestr = filepaths.join('|');
               const value = `@file(${filestr})`;
-              return `${enabled}${item.name}: ${value}`;
+              return `${enabled}${item.name}: ${value}${contentType}`;
             }
           })
           .join('\n')

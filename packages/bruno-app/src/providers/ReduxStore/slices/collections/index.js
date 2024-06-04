@@ -703,6 +703,7 @@ export const collectionsSlice = createSlice({
             name: '',
             value: '',
             description: '',
+            contentType: '',
             enabled: true
           });
         }
@@ -724,6 +725,7 @@ export const collectionsSlice = createSlice({
             param.name = action.payload.param.name;
             param.value = action.payload.param.value;
             param.description = action.payload.param.description;
+            param.contentType = action.payload.param.contentType;
             param.enabled = action.payload.param.enabled;
           }
         }
