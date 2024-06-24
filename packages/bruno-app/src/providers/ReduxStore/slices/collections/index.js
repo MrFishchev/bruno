@@ -748,6 +748,45 @@ export const collectionsSlice = createSlice({
         }
       }
     },
+    addBinaryParam: (state, action) => {
+      const collection = findCollectionByUid(state.collections, action.payload.collectionUid);
+
+      if (collection) {
+        const item = findItemInCollection(collection, action.payload.itemUid);
+
+        if (item && isItemARequest(item)) {
+          if (!item.draft) {
+            item.draft = cloneDeep(item);
+          }
+
+          if (!item.draft.request.body.binaryFile) {
+            item.draft.request.body.binaryFile = {
+              uid: uuid(),
+              type: action.payload.type,
+              name: 'file',
+              value: undefined,
+              description: '',
+              contentType: 'application/octet-stream',
+              enabled: true
+            };
+          }
+        }
+      }
+    },
+    updateBinaryParam: (state, action) => {
+      const collection = findCollectionByUid(state.collections, action.payload.collectionUid);
+
+      if (collection) {
+        const item = findItemInCollection(collection, action.payload.itemUid);
+
+        if (item && isItemARequest(item)) {
+          if (!item.draft) {
+            item.draft = cloneDeep(item);
+          }
+          item.draft.request.body.binaryFile = action.payload.param;
+        }
+      }
+    },
     updateRequestAuthMode: (state, action) => {
       const collection = findCollectionByUid(state.collections, action.payload.collectionUid);
 
@@ -810,6 +849,10 @@ export const collectionsSlice = createSlice({
             }
             case 'multipartForm': {
               item.draft.request.body.multipartForm = action.payload.content;
+              break;
+            }
+            case 'binaryFile': {
+              item.draft.request.body.binaryFile = action.payload.content;
               break;
             }
           }
@@ -1508,6 +1551,8 @@ export const {
   addMultipartFormParam,
   updateMultipartFormParam,
   deleteMultipartFormParam,
+  addBinaryParam,
+  updateBinaryParam,
   updateRequestAuthMode,
   updateRequestBodyMode,
   updateRequestBody,

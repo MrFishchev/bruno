@@ -525,6 +525,10 @@ export const humanizeRequestBodyMode = (mode) => {
       label = 'Multipart Form';
       break;
     }
+    case 'binaryFile': {
+      label = 'Binary File';
+      break;
+    }
   }
 
   return label;

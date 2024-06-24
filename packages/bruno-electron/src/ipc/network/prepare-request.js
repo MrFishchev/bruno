@@ -219,6 +219,19 @@ const prepareRequest = (request, collectionRoot, collectionPath) => {
     axiosRequest.data = form;
   }
 
+  if (request.body.mode === 'binaryFile') {
+    if (request.body.binaryFile && request.body.binaryFile.value) {
+      const { contentType } = request.body.binaryFile;
+      const { size, path: filePath, name } = request.body.binaryFile.value;
+
+      axiosRequest.headers['content-type'] = contentType;
+      axiosRequest.headers['content-length'] = size;
+      axiosRequest.headers['content-disposition'] = `attachment; filename=${name}`;
+
+      axiosRequest.data = fs.createReadStream(filePath);
+    }
+  }
+
   if (request.body.mode === 'graphql') {
     const graphqlQuery = {
       query: get(request, 'body.graphql.query'),
